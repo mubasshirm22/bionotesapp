@@ -274,6 +274,103 @@ button.delete:hover {
   border: 1px solid #e1bee7;
 }
 
+/* wrapper so we can put the X button inside the search input */
+.search-input-wrap {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.search-input-wrap input {
+  margin-bottom: 0;
+  padding-right: 30px;
+}
+
+/* the X button that clears the search box */
+.clear-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.clear-btn:hover {
+  color: #555;
+  background: none;
+}
+
+/* abstract header row — label on the left, copy button on the right */
+.abstract-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* small copy button next to the abstract label */
+.copy-btn {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  background: none;
+  border: 1px solid #ccc;
+  color: #555;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  border-color: #2c6e49;
+  color: #2c6e49;
+  background: none;
+}
+
+/* the row above the notes list with the filter input and sort button */
+.notes-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  align-items: center;
+}
+
+/* filter input — takes up most of the space */
+.notes-filter {
+  flex: 1;
+  margin-bottom: 0;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+}
+
+/* button to flip between newest and oldest */
+.sort-btn {
+  background: none;
+  border: 1px solid #ccc;
+  color: #555;
+  font-size: 0.78rem;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sort-btn:hover {
+  border-color: #2c6e49;
+  color: #2c6e49;
+  background: none;
+}
+
+/* character counter below the note textarea */
+.char-count {
+  font-size: 0.78rem;
+  text-align: right;
+  margin-bottom: 6px;
+  margin-top: -4px;
+}
+
 .notes-list {
   margin-top: 16px;
 }
