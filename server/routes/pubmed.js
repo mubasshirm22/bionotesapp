@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-async function searchPubMed(query, limit = 5) {
-  const searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=${limit}&retmode=json&sort=relevance`
+async function searchPubMed(term, limit = 5) {
+  const searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(term)}&retmax=${limit}&retmode=json&sort=relevance`
   const searchRes = await fetch(searchUrl)
   const searchData = await searchRes.json()
   const ids = searchData.esearchresult?.idlist || []
@@ -60,8 +60,29 @@ async function lookupDOI(doi) {
   }
 }
 
+function extractMatches(xml, regex) {
+  const results = []
+  let match
+  while ((match = regex.exec(xml)) !== null) {
+    results.push(match)
+  }
+  return results
+}
+
+function decodeEntities(str) {
+  return str
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/<[^>]+>/g, '')
+    .trim()
+}
+
+// Search route
 router.get('/', async (req, res) => {
-  const query = req.query.query
+  const { query, type } = req.query
   if (!query) return res.status(400).json({ error: 'No query provided' })
 
   try {
@@ -71,13 +92,52 @@ router.get('/', async (req, res) => {
       return res.json({ results: [paper] })
     }
 
-    const results = await searchPubMed(query)
+    const term = type === 'author' ? `${query}[Author]` : query
+    const results = await searchPubMed(term)
     if (results.length === 0) return res.status(404).json({ error: 'No results found' })
 
     res.json({ results })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Search failed' })
+  }
+})
+
+// Details route — fetches abstract, keywords, MeSH terms for a single PMID
+router.get('/details', async (req, res) => {
+  const { pmid } = req.query
+  if (!pmid) return res.status(400).json({ error: 'No PMID provided' })
+
+  try {
+    const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${pmid}&rettype=xml&retmode=xml`
+    const response = await fetch(url)
+    const xml = await response.text()
+
+    // Abstract — may be structured (Background, Methods, etc.) or plain
+    const abstractMatches = extractMatches(xml, /<AbstractText(?:\s+Label="([^"]*)")?[^>]*>([\s\S]*?)<\/AbstractText>/g)
+    const abstractParts = abstractMatches.map(m => {
+      const label = m[1]
+      const text = decodeEntities(m[2])
+      return label ? `${label}: ${text}` : text
+    })
+    const abstract = abstractParts.join('\n\n') || null
+
+    // Author keywords
+    const keywordMatches = extractMatches(xml, /<Keyword[^>]*>([\s\S]*?)<\/Keyword>/g)
+    const keywords = keywordMatches.map(m => decodeEntities(m[1])).filter(Boolean)
+
+    // MeSH descriptor terms
+    const meshMatches = extractMatches(xml, /<DescriptorName[^>]*>([\s\S]*?)<\/DescriptorName>/g)
+    const meshTerms = [...new Set(meshMatches.map(m => decodeEntities(m[1])).filter(Boolean))]
+
+    // Publication types
+    const pubTypeMatches = extractMatches(xml, /<PublicationType[^>]*>([\s\S]*?)<\/PublicationType>/g)
+    const pubTypes = [...new Set(pubTypeMatches.map(m => decodeEntities(m[1])).filter(Boolean))]
+
+    res.json({ abstract, keywords, meshTerms, pubTypes })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to fetch details' })
   }
 })
 
