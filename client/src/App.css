@@ -437,3 +437,186 @@ button.delete:hover {
   padding: 4px 12px;
   font-size: 0.8rem;
 }
+
+/* ── tabs at the top of the search panel ── */
+.panel-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0;
+}
+
+.panel-tab {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.9rem;
+  padding: 6px 14px 8px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.panel-tab.active {
+  color: #2c6e49;
+  border-bottom-color: #2c6e49;
+  font-weight: bold;
+  background: none;
+}
+
+.panel-tab:hover:not(.active) {
+  color: #555;
+  background: none;
+}
+
+/* small number badge on the Saved tab showing how many papers are saved */
+.tab-count {
+  background: #2c6e49;
+  color: white;
+  font-size: 0.7rem;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: normal;
+}
+
+/* ── star / favorite button ── */
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #ccc;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.star-btn.starred {
+  color: #f5a623;
+}
+
+.star-btn:hover {
+  background: none;
+  color: #f5a623;
+}
+
+/* top row of a result item — title + star button side by side */
+.result-item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* top row of the paper detail view — back button + save button */
+.result-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.result-detail-header .star-btn {
+  font-size: 0.85rem;
+  color: #aaa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 3px 10px;
+}
+
+.result-detail-header .star-btn.starred {
+  color: #f5a623;
+  border-color: #f5a623;
+}
+
+/* ── saved papers list ── */
+.saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.saved-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 12px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.saved-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.saved-title {
+  font-size: 0.87rem;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.saved-title a {
+  color: #222;
+  text-decoration: none;
+}
+
+.saved-title a:hover {
+  color: #2c6e49;
+  text-decoration: underline;
+}
+
+/* ── status pills ── */
+.status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.status-pill {
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  color: #888;
+  cursor: pointer;
+}
+
+.status-pill:hover {
+  background: #eee;
+}
+
+/* each status has its own colour when selected */
+.status-pill.status-not-started.active {
+  background: #f5f5f5;
+  color: #555;
+  border-color: #bbb;
+}
+
+.status-pill.status-reading.active {
+  background: #e3f2fd;
+  color: #1565c0;
+  border-color: #90caf9;
+}
+
+.status-pill.status-reviewed.active {
+  background: #fff3e0;
+  color: #e65100;
+  border-color: #ffcc80;
+}
+
+.status-pill.status-mastered.active {
+  background: #e8f5e9;
+  color: #2c6e49;
+  border-color: #a5d6a7;
+}
