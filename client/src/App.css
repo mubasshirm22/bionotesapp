@@ -24,8 +24,23 @@ h1 {
 
 .subtitle {
   color: #666;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   font-size: 0.95rem;
+}
+
+.problem-statement {
+  background: #f0f7f3;
+  border-left: 3px solid #2c6e49;
+  padding: 12px 16px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 24px;
+}
+
+.problem-statement p {
+  font-size: 0.88rem;
+  color: #444;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .panels {
